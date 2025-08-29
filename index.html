@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Textofy</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #parent {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      align-items: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    #heading {
+      color: #333;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    #area {
+      width: 100%;
+      height: 150px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 20px;
+      outline: none;
+      text-align: left;
+      word-wrap: break-word;
+      overflow-y: auto;
+    }
+
+    #child2 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 10px;
+      width: 100%;
+    }
+
+    #child2 > button {
+      height: 42px;
+      background-color: red;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 10px 20px;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    #child2 > button:hover {
+      background-color: darkred;
+    }
+
+    #child3 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    #child3 label {
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    input[type="color"], select {
+      padding: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+   
+    @media (max-width: 600px) {
+      #heading {
+        font-size: 22px;
+      }
+      #area {
+        height: 120px;
+        font-size: 16px;
+      }
+      #child3 {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      #child3 label {
+        align-items: flex-start;
+      }
+      #child2 > button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="parent">
+
+    <div class="child">
+      <h1 id="heading">Textofy 🎨</h1>
+    </div>
+
+    <div class="child" id="child2">
+      <div id="area" contenteditable="true">Type something...</div>
+      <button onclick="downloadImage()">Download</button>
+    </div>
+
+    <div class="child" id="child3">
+     
+      <label>Background:
+        <input type="color" id="bgColor">
+      </label>
+
+      
+      <label>Text Color:
+        <input type="color" id="textColor">
+      </label>
+
+     
+      <label>Font Size:
+        <select id="fontSize">
+          <option value="16px">16px</option>
+          <option value="20px" selected>20px</option>
+          <option value="24px">24px</option>
+          <option value="28px">28px</option>
+          <option value="32px">32px</option>
+        </select>
+      </label>
+
+      
+      <label>Font Family:
+        <select onchange="changeFont(this.value)">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Times New Roman">Times New Roman</option>
+        </select>
+      </label>
+    </div>
+
+  </div>
+
+  <script>
+    function changeFont(font){
+      document.getElementById('area').style.fontFamily = font;
+    }
+
+    function downloadImage(){
+      const image = document.getElementById('area');
+      html2canvas(image)
+        .then(canvas =>{
+          const link = document.createElement('a');
+          link.download = "textofy.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        })
+        .catch(err => console.error(err));
+    }
+
+   
+    document.getElementById("bgColor").addEventListener("input", function(){
+      document.getElementById("area").style.backgroundColor = this.value;
+    });
+
+   
+    document.getElementById("textColor").addEventListener("input", function(){
+      document.getElementById("area").style.color = this.value;
+    });
+
+    
+    document.getElementById("fontSize").addEventListener("change", function(){
+      document.getElementById("area").style.fontSize = this.value;
+    });
+  </script>
+</body>
+</html>
